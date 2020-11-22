@@ -1,4 +1,4 @@
-namespace API.Properties
+namespace API.Entities
 {
     public class Product
     {
