@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Core.Entities;
 using Core.Interfaces;
+using Core.Specifications;
 using Infrastructure.Data;
 //using API.Data;
 //using API.Entities;
@@ -33,7 +34,9 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Product>>> GetProducts()
         {
-            var products = await _productRepo.ListAllAsync();
+            //var products = await _productRepo.ListAllAsync();
+            var spec = new ProductWithTypesAndBrandsSpecification();
+            var products = await _productRepo.ListAsync(spec);
             return Ok(products);
         }
 
