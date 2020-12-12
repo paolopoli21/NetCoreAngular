@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { IBrand } from '../shared/models/brand';
 import { IProduct } from '../shared/models/product';
 import { IType } from '../shared/models/productType';
@@ -11,6 +11,7 @@ import { ShopService } from './shop.service';
   styleUrls: ['./shop.component.css']
 })
 export class ShopComponent implements OnInit {
+  @ViewChild('search', {static: true}) searchTerm: ElementRef | undefined;
   products: IProduct[];
   brands: IBrand[];
   types: IType[];
@@ -36,6 +37,7 @@ export class ShopComponent implements OnInit {
     this.brands = [];
     this.types = [];
     this.totalCount = 0;
+    //this.searchTerm = null;
     // this.brandIdSelected = 0;
     // this.typeIdSelected = 0;
     // this.sortSelected = 'name';
@@ -55,7 +57,7 @@ export class ShopComponent implements OnInit {
       this.shopParams.pageSize = response.pageSize;
       this.totalCount = response.coutn;
       //debugger;
-      console.log(this.totalCount);
+      //console.log(this.totalCount);
     },
     (error) =>{
       console.log(error);
@@ -100,7 +102,19 @@ export class ShopComponent implements OnInit {
   }
 
   onPageChanged(event: any){
-    this.shopParams.pageNumber = event.page;
+    this.shopParams.pageNumber = event;
+    console.log(event);
+    this.getProducts();
+  }
+
+  onSearch(){
+    this.shopParams.search = this.searchTerm?.nativeElement.value;
+    this.getProducts();
+  }
+
+  onReset(){
+    //this.searchTerm?.nativeElement.value = null;
+    this.shopParams = new ShopParams();
     this.getProducts();
   }
 
