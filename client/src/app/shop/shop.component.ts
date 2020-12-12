@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { IBrand } from '../shared/models/brand';
 import { IProduct } from '../shared/models/product';
 import { IType } from '../shared/models/productType';
+import { ShopParams } from '../shared/models/shopParams';
 import { ShopService } from './shop.service';
 
 @Component({
@@ -13,9 +14,8 @@ export class ShopComponent implements OnInit {
   products: IProduct[];
   brands: IBrand[];
   types: IType[];
-  brandIdSelected: number;
-  typeIdSelected: number;
-  sortSelected: string;
+  shopParams = new ShopParams();
+  totalCount: number;
   sortOptions = [
     {
       name: 'Alphabetical',
@@ -35,9 +35,10 @@ export class ShopComponent implements OnInit {
     this.products = [];
     this.brands = [];
     this.types = [];
-    this.brandIdSelected = 0;
-    this.typeIdSelected = 0;
-    this.sortSelected = 'name';
+    this.totalCount = 0;
+    // this.brandIdSelected = 0;
+    // this.typeIdSelected = 0;
+    // this.sortSelected = 'name';
    }
 
   ngOnInit(): void {
@@ -46,10 +47,15 @@ export class ShopComponent implements OnInit {
     this.getTypes();
   }
 
-  getProducts(){
-    this.shopService.getProducts(this.brandIdSelected, this.typeIdSelected, this.sortSelected).subscribe((response: any) => {
+  getProducts(): void {
+    // tslint:disable-next-line: max-line-length
+    this.shopService.getProducts(this.shopParams).subscribe((response: any) => {
       this.products = response.data;
-      //console.log(this.products);
+      this.shopParams.pageNumber = response.pageIndex;
+      this.shopParams.pageSize = response.pageSize;
+      this.totalCount = response.coutn;
+      //debugger;
+      console.log(this.totalCount);
     },
     (error) =>{
       console.log(error);
@@ -57,7 +63,7 @@ export class ShopComponent implements OnInit {
     );
   }
 
-  getBrands(): void{
+  getBrands(): void {
     this.shopService.getBrands().subscribe(response => {
       this.brands = [{id: 0, name: 'All'}, ...response];
     },
@@ -78,20 +84,23 @@ export class ShopComponent implements OnInit {
   }
 
   onBrandSelected(brandId: number): void{
-    this.brandIdSelected = brandId;
-    console.log(this.brandIdSelected);
+    this.shopParams.brandId = brandId;
+    console.log(this.shopParams.brandId);
     this.getProducts();
   }
 
   onTypeSelected(typeId: number): void{
-    this.typeIdSelected = typeId;
+    this.shopParams.typeId = typeId;
     this.getProducts();
   }
 
   onSortSelected(event: any): void{
-    //debugger;
-    //console.log(event)
-    this.sortSelected = event.target.value;
+    this.shopParams.sort = event.target.value;
+    this.getProducts();
+  }
+
+  onPageChanged(event: any){
+    this.shopParams.pageNumber = event.page;
     this.getProducts();
   }
 

@@ -15,7 +15,7 @@
       <ul class="list-group">
         <li class="list-group-item" 
           *ngFor="let brand of brands"
-          [class.active] = "brand.id === brandIdSelected"
+          [class.active] = "brand.id === shopParams.brandId"
           [value] = "brand.id"
           (click) = "onBrandSelected(brand.id)"
         >
@@ -27,7 +27,7 @@
       <ul class="list-group">
         <li class="list-group-item" 
           *ngFor="let type of types"
-          [class.active] = "type.id === typeIdSelected"
+          [class.active] = "type.id === shopParams.typeId"
           [value] = "type.id"
           (click) = "onTypeSelected(type.id)"
           >
@@ -38,9 +38,15 @@
 
     <section class="col-9">
       <div class="d-flex justify-content-between aling-items-center pb-2">
-        <header>
-          <span>Showing <strong>10</strong> <strong>16</strong> Results</span>
-        </header>
+        
+        <app-pagin-header
+          [totalCount] = "totalCount"
+          [pageNumber] = "shopParams.pageNumber"
+          [pageSize] = "shopParams.pageSize"
+        >
+
+        </app-pagin-header>
+
         <div class="form-inline mt-2">
           <input class="form-control" style="width: 300px;" placeholder="Search" type="text"/>
           <div class="btn btn-outline-primary my-2">Search</div>
@@ -53,10 +59,12 @@
           <app-product-item [product] ="item"></app-product-item>
         </div>
       </div>
-      <div class="d-flex justify-content-center"> 
+      <div class="d-flex justify-content-center" *ngIf="totalCount > 0"> 
         <pagination 
             [boundaryLinks]="true" 
-            [totalItems]="77"
+            [totalItems]="18"
+            (pageChanged)="onPageChanged($event)"
+            [itemsPerPage] ="shopParams.pageSize"
             previousText="&lsaquo;" 
             nextText="&rsaquo;" 
             firstText="&laquo;" 
