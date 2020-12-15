@@ -9,7 +9,8 @@ styleUrls: ['./test-error.component.css']
 })
 export class TestErrorComponent implements OnInit {
 
-  baseUrl = environment.apiUrl;
+baseUrl = environment.apiUrl;
+validationError: any;
 
 constructor(private http: HttpClient) { }
 
@@ -52,8 +53,10 @@ ngOnInit(): void {
     },
     error =>{
       console.log(error);
+      this.validationError = error.errors;
     }
     );
   }
 
 }
+ 
