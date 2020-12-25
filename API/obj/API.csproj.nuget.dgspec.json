@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Software\\skinet\\api\\API.csproj": {}
+    "C:\\Software\\skinet\\API\\API.csproj": {}
   },
   "projects": {
-    "C:\\Software\\skinet\\api\\API.csproj": {
+    "C:\\Software\\skinet\\API\\API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Software\\skinet\\api\\API.csproj",
+        "projectUniqueName": "C:\\Software\\skinet\\API\\API.csproj",
         "projectName": "API",
-        "projectPath": "C:\\Software\\skinet\\api\\API.csproj",
+        "projectPath": "C:\\Software\\skinet\\API\\API.csproj",
         "packagesPath": "C:\\Users\\PAUL\\.nuget\\packages\\",
-        "outputPath": "C:\\Software\\skinet\\api\\obj\\",
+        "outputPath": "C:\\Software\\skinet\\API\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\PAUL\\AppData\\Roaming\\NuGet\\NuGet.Config",
