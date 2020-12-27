@@ -27,6 +27,7 @@ export class BasketService {
   setBasket(basket: IBasket){
     return this.http.post(this.baseUrl + 'basket', basket)
       .subscribe((response: any) =>{
+        console.log(response);
         this.basketSource.next(response);
       },
       error =>{
@@ -46,7 +47,7 @@ export class BasketService {
     this.setBasket(basket);
   }
 
-  addOrUpdateItem(items: any, itemToAdd: IBasketItem, quantity: number): any {
+  addOrUpdateItem(items: IBasketItem[], itemToAdd: IBasketItem, quantity: number): any {
     const index = items.findIndex(i => i.id === itemToAdd.id);
     if(index === -1){
       itemToAdd.quantity = quantity;
