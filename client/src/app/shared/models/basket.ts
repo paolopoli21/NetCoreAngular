@@ -23,3 +23,9 @@ export interface IBasketItem {
           this.items = [];
       }
   }
+
+  export interface IBasketTotals {
+    shipping: number;
+    subtotal: number;
+    total: number;
+  }

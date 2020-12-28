@@ -10,7 +10,8 @@ import { BasketService } from './basket.service';
 })
 export class BasketComponent implements OnInit {
   basket$: Observable<IBasket> | undefined;
-  constructor(private basketService: BasketService) { }
+  constructor(private basketService: BasketService) {
+  }
 
   ngOnInit(): void {
     this.basket$ = this.basketService.basket$;
