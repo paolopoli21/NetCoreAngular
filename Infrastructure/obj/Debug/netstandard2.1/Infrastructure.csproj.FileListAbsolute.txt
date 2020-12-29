@@ -1,0 +1,11 @@
+C:\Software\skinet\Infrastructure\bin\Debug\netstandard2.1\Infrastructure.deps.json
+C:\Software\skinet\Infrastructure\bin\Debug\netstandard2.1\Infrastructure.dll
+C:\Software\skinet\Infrastructure\bin\Debug\netstandard2.1\Infrastructure.pdb
+C:\Software\skinet\Infrastructure\bin\Debug\netstandard2.1\Core.dll
+C:\Software\skinet\Infrastructure\bin\Debug\netstandard2.1\Core.pdb
+C:\Software\skinet\Infrastructure\obj\Debug\netstandard2.1\Infrastructure.csprojAssemblyReference.cache
+C:\Software\skinet\Infrastructure\obj\Debug\netstandard2.1\Infrastructure.AssemblyInfoInputs.cache
+C:\Software\skinet\Infrastructure\obj\Debug\netstandard2.1\Infrastructure.AssemblyInfo.cs
+C:\Software\skinet\Infrastructure\obj\Debug\netstandard2.1\Infrastructure.csproj.CopyComplete
+C:\Software\skinet\Infrastructure\obj\Debug\netstandard2.1\Infrastructure.dll
+C:\Software\skinet\Infrastructure\obj\Debug\netstandard2.1\Infrastructure.pdb
