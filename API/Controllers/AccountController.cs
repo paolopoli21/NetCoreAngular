@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using API.Dtos;
 using API.Errors;
 using Core.Entities.Identity;
+using Core.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,24 +12,27 @@ namespace API.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _singInManager;
-        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> singInManager)
+        private readonly ITokenService _tokenService;
+        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> singInManager, ITokenService tokenService)
         {
+            _tokenService = tokenService;
             _singInManager = singInManager;
             _userManager = userManager;
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<UserDto>> Login(LoginDto loginDto){
+        public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
+        {
             var user = await _userManager.FindByEmailAsync(loginDto.Email);
-            if(user == null) return Unauthorized(new ApiResponse(401));
+            if (user == null) return Unauthorized(new ApiResponse(401));
 
             var result = await _singInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
-            if(!result.Succeeded) return Unauthorized(new ApiResponse(401));
+            if (!result.Succeeded) return Unauthorized(new ApiResponse(401));
 
             return new UserDto
             {
                 Email = user.Email,
-                Token = "this will be a token",
+                Token = _tokenService.CreateToken(user),
                 DisplayName = user.DisplayName
             };
         }
@@ -49,7 +53,7 @@ namespace API.Controllers
             return new UserDto
             {
                 DisplayName = user.DisplayName,
-                Token = "This will be a token",
+                Token = _tokenService.CreateToken(user),
                 Email = user.Email
             };
         }
