@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using API.Extensions;
+using AutoMapper;
 
 namespace API.Controllers
 {
@@ -16,8 +18,10 @@ namespace API.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _singInManager;
         private readonly ITokenService _tokenService;
-        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> singInManager, ITokenService tokenService)
+        private readonly IMapper _mapper;
+        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> singInManager, ITokenService tokenService, IMapper mapper)
         {
+            _mapper = mapper;
             _tokenService = tokenService;
             _singInManager = singInManager;
             _userManager = userManager;
@@ -25,11 +29,12 @@ namespace API.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<ActionResult<UserDto>> GetCurrentUser(){
-            var email = HttpContext.User?.Claims?.FirstOrDefault(x=> x.Type == ClaimTypes.Email)?.Value;
+        public async Task<ActionResult<UserDto>> GetCurrentUser()
+        {
+            //var email = HttpContext.User?.Claims?.FirstOrDefault(x=> x.Type == ClaimTypes.Email)?.Value;
 
-            var user = await _userManager.FindByEmailAsync(email);
-                        return new UserDto
+            var user = await _userManager.FindByEmailFromClaimsPrinciple(HttpContext.User);
+            return new UserDto
             {
                 Email = user.Email,
                 Token = _tokenService.CreateToken(user),
@@ -39,15 +44,34 @@ namespace API.Controllers
         }
 
         [HttpGet("emailexists")]
-        public async Task<ActionResult<bool>> CheckEmailExistsAsync([FromQuery] string email){
+        public async Task<ActionResult<bool>> CheckEmailExistsAsync([FromQuery] string email)
+        {
             return await _userManager.FindByEmailAsync(email) != null;
         }
-
+        [Authorize]
         [HttpGet("address")]
-        public async Task<ActionResult<Address>> GetUserAddress(){
-            var email = HttpContext.User?.Claims?.FirstOrDefault(x=> x.Type == ClaimTypes.Email)?.Value;
-            var user = await _userManager.FindByEmailAsync(email);
-            return user.Address;
+        public async Task<ActionResult<AddressDto>> GetUserAddress()
+        {
+            //var email = HttpContext.User?.Claims?.FirstOrDefault(x=> x.Type == ClaimTypes.Email)?.Value;
+            var user = await _userManager.FindByUserByClaimsPrincipleWithAddressAsync(HttpContext.User);
+            //return user.Address;
+            return _mapper.Map<Address, AddressDto>(user.Address);
+        }
+
+        [Authorize]
+        [HttpPut("address")]
+        public async Task<ActionResult<AddressDto>> UpdateUserAddress(AddressDto address){
+            var user = await _userManager.FindByUserByClaimsPrincipleWithAddressAsync(HttpContext.User);
+            user.Address = _mapper.Map<AddressDto, Address>(address);
+
+            var result = await _userManager.UpdateAsync(user);
+
+            if(result.Succeeded){
+                return Ok(_mapper.Map<Address, AddressDto>(user.Address));
+            }
+
+            return BadRequest("Problem updating the user");
+
         }
 
         [HttpPost("login")]
