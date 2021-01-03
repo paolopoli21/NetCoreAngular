@@ -1,5 +1,8 @@
+import { Route } from '@angular/compiler/src/core';
 import { Component, OnInit } from '@angular/core';
 import {ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AccountService } from '../account.service';
 
 @Component({
   selector: 'app-login',
@@ -9,7 +12,7 @@ import {ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angular
 export class LoginComponent implements OnInit {
   loginForm: FormGroup = new FormGroup({});
 
-  constructor() { }
+  constructor(private accountService: AccountService,private router: Router) { }
 
   ngOnInit(): void {
     this.createLoginForm();
@@ -22,9 +25,16 @@ export class LoginComponent implements OnInit {
       password: new FormControl('', Validators.required)
     });
   }
-
+ 
   onSubmit(){
-    console.log(this.loginForm?.value);
+    this.accountService.login(this.loginForm.value)
+      .subscribe(() => {
+        this.router.navigateByUrl('/shop');
+        console.log("User logged in");
+      },
+      error =>{
+        console.log(error);
+      }
+      );
   }
-
 }
