@@ -11,6 +11,7 @@ import { AccountService } from '../account.service';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup = new FormGroup({});
+  invalid: boolean | undefined= false ;
 
   constructor(private accountService: AccountService,private router: Router) { }
 
@@ -23,6 +24,7 @@ export class LoginComponent implements OnInit {
       email: new FormControl('', [Validators.required, Validators.pattern('^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$')]),
       password: new FormControl('', Validators.required)
     });
+    //this.invalid = this.loginForm.get('email')?.invalid;
   }
  
   onSubmit(){

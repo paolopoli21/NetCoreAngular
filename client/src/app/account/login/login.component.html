@@ -4,21 +4,47 @@
           <h1 class="h3 mb-3 fw-normal">Login</h1>
           <label for="inputEmail" class="visually-hidden">Email address</label>
           <input formControlName="email"  type="email" id="inputEmail" class="form-control" placeholder="Email address" >
+          
+          <span class="text-danger" *ngIf="loginForm.get('email') !== undefined 
+          &&  loginForm.get('email')?.invalid
+          &&  loginForm.get('email')?.touched
+          &&  loginForm.get('email')?.errors['required']
+          ">
+          Email address is required
+          </span>
+          <span class="text-danger" *ngIf="loginForm.get('email') !== undefined 
+          &&  loginForm.get('email')?.invalid
+          &&  loginForm.get('email')?.touched
+          &&  loginForm.get('email')?.errors['pattern']
+          ">
+          Email address is not valid
+          </span>
+          <br>
           <label for="inputPassword" class="visually-hidden">Password</label>
           <input formControlName="password" type="password" id="inputPassword" class="form-control" placeholder="Password" >
+          <span class="text-danger" *ngIf="loginForm.get('password') !== undefined 
+          &&  loginForm.get('password')?.invalid
+          &&  loginForm.get('password')?.touched
+          &&  loginForm.get('password')?.errors['required']
+          ">
+          password is required
+          </span>
+
           <div class="checkbox mb-3">
             <label>
               <input type="checkbox" value="remember-me"> Remember me
             </label>
           </div>
-          <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+          <button [disabled] ="loginForm.invalid" class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
         </form>
     </div>
     <div class="col-4">
       <p>Form status: {{loginForm.status}}</p>
-        <p>Email status: {{loginForm.get('email') }}</p>
-        <p>Email Tauched: {{loginForm.get('email') }}</p>
-        <p>Email Dirty: {{loginForm.get('email') }}</p>
-        <pre>{{ loginForm.value | json }}</pre>
+      <span *ngIf="loginForm.get('email') !== undefined">
+        <p>Email status: {{loginForm.get('email')?.status }}</p>
+        <p>Email Tauched: {{loginForm.get('email')?.touched }}</p>
+        <p>Email Dirty: {{loginForm.get('email')?.dirty }}</p>
+      <pre>{{ loginForm.value | json }}</pre>
+      </span>
     </div>
 </div>
