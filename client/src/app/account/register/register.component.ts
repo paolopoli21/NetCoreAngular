@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AccountModule } from '../account.module';
+import { AccountService } from '../account.service';
 
 @Component({
   selector: 'app-register',
@@ -7,9 +11,33 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RegisterComponent implements OnInit {
 
-  constructor() { }
+  registerForm: FormGroup;
+
+  constructor(private fb: FormBuilder, private accountService: AccountService, private router: Router) { 
+    this.registerForm = new FormGroup({});
+  }
 
   ngOnInit(): void {
+    this.createRegisterForm();
+  }
+
+  createRegisterForm(){
+    this.registerForm = this.fb.group({
+      displayName: [null, [Validators.required]],
+      email: [null, [Validators.required, Validators.pattern('^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$')]],
+      password: [null, [Validators.required]]
+    });
+  }
+
+  onSubmit(){
+    this.accountService.register(this.registerForm.value).subscribe(response =>{
+      this.router.navigateByUrl('/shop');
+    },
+    error =>{
+      console.log(error);
+    }
+    
+    );
   }
 
 }
