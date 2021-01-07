@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AsyncValidatorFn, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { of, timer } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { AccountModule } from '../account.module';
 import { AccountService } from '../account.service';
 
@@ -12,6 +14,7 @@ import { AccountService } from '../account.service';
 export class RegisterComponent implements OnInit {
 
   registerForm: FormGroup;
+  errors: string[] = [];
 
   constructor(private fb: FormBuilder, private accountService: AccountService, private router: Router) { 
     this.registerForm = new FormGroup({});
@@ -24,7 +27,9 @@ export class RegisterComponent implements OnInit {
   createRegisterForm(){
     this.registerForm = this.fb.group({
       displayName: [null, [Validators.required]],
-      email: [null, [Validators.required, Validators.pattern('^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$')]],
+      email: [null, [Validators.required, Validators.pattern('^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$')],
+      [this.validatorNotTaken()]
+      ],
       password: [null, [Validators.required]]
     });
   }
@@ -35,9 +40,26 @@ export class RegisterComponent implements OnInit {
     },
     error =>{
       console.log(error);
+      this.errors = error.erros;
     }
-    
     );
+  }
+
+  validatorNotTaken(): AsyncValidatorFn{
+    return control =>{
+      return timer(500).pipe(
+        switchMap(() => {
+          if(!control.value){
+            return of(null);
+          }
+          return this.accountService.checkEmailExists(control.value).pipe(
+            map(res => {
+              return res ? { emailexists: true } : null;
+            })
+          );
+        })
+      );
+    };
   }
 
 }
