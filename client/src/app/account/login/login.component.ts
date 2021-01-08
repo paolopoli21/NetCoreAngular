@@ -1,7 +1,7 @@
 import { Route } from '@angular/compiler/src/core';
 import { Component, OnInit } from '@angular/core';
 import {ReactiveFormsModule, FormControl, FormGroup, Validators, FormControlName } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AccountService } from '../account.service';
 
 @Component({
@@ -11,12 +11,15 @@ import { AccountService } from '../account.service';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup = new FormGroup({});
+  returnUrl: string = "";
 
-  constructor(private accountService: AccountService,private router: Router) { 
+  constructor(private accountService: AccountService,private router: Router,
+     private activatedRoute: ActivatedRoute) { 
     
   }
 
   ngOnInit(): void {
+    this.returnUrl = this.activatedRoute.snapshot.queryParams.returnUrl || '/shop';
     this.createLoginForm();
   }
 
@@ -34,7 +37,7 @@ export class LoginComponent implements OnInit {
     debugger;
     this.accountService.login(this.loginForm.value)
       .subscribe(() => {
-        this.router.navigateByUrl('/shop');
+        this.router.navigateByUrl(this.returnUrl);
         console.log("User logged in");
       },
       error =>{
