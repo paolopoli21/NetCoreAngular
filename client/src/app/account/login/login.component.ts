@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit {
     debugger;
     this.accountService.login(this.loginForm.value)
       .subscribe(() => {
-        this.router.navigateByUrl(this.returnUrl);
+        this.router.navigateByUrl(this.returnUrl );
         console.log("User logged in");
       },
       error =>{

@@ -2,7 +2,7 @@ import { HttpClient, HttpHandler, HttpHeaders } from '@angular/common/http';
 import { Route } from '@angular/compiler/src/core';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, of, ReplaySubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { IUser } from '../shared/models/User';
@@ -12,7 +12,7 @@ import { IUser } from '../shared/models/User';
 })
 export class AccountService {
   baseUrl = environment.apiUrl;
-  private currentUserSource = new BehaviorSubject<any>(null);
+  private currentUserSource = new ReplaySubject<IUser>(1);
   //private currentUserSource:BehaviorSubject<IUser>;
   currentUser$ = this.currentUserSource.asObservable();
 
@@ -21,11 +21,16 @@ export class AccountService {
     //  this.currentUsersource = this.currentUserSource.asObservable();
   }
 
-  getCurrentUserValue(){
-    return this.currentUserSource.value;
-  }
+  // getCurrentUserValue(){
+  //   return this.currentUserSource.value;
+  // }
 
   loadCurrentUser(token: string){
+    if(token===undefined){
+      this.currentUserSource.next(undefined);
+      return of(undefined);
+    }
+
     let headers = new HttpHeaders();
     headers = headers.set('Authorization', `Bearer ${token}`);
 
@@ -58,7 +63,7 @@ export class AccountService {
 
   logout(){
     localStorage.removeItem('token');
-    this.currentUserSource.next(null);
+    this.currentUserSource.next(undefined);
     this.router.navigateByUrl('/');
   }
 
