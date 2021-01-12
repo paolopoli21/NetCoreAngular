@@ -6,14 +6,14 @@ namespace Core.Entities.OrderAggregate
 
         }
         
-        public OrderItem(ProductItemOrderId itemOrdered, decimal price, int quantity) 
+        public OrderItem(ProductItemOrdered itemOrdered, decimal price, int quantity) 
         {
             this.ItemOrdered = itemOrdered;
             this.Price = price;
             this.Quantity = quantity;
    
         }
-                public ProductItemOrderId ItemOrdered { get; set; }
+        public ProductItemOrdered ItemOrdered { get; set; }
         public decimal Price { get; set; }
         public int Quantity { get; set; }
         
