@@ -5,6 +5,9 @@ namespace Core.Entities.OrderAggregate
 {
     public class Order : BaseEntity
     {
+        public Order(){
+
+        }
         public Order(string bayerEmail, Address shipToAddress, DeliveryMethod deliveryMethod, IReadOnlyList<OrderItem> orderItems, decimal subtotal)
         {
             BayerEmail = bayerEmail;
@@ -26,7 +29,6 @@ namespace Core.Entities.OrderAggregate
         public decimal GetTotal(){
             return Subtotal + DeliveryMethod.Price;
         }
-
 
     }
 }
