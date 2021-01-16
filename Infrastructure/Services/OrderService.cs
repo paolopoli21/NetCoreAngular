@@ -67,5 +67,7 @@ namespace Infrastructure.Services
             var spec = new OrdersWithItemsAndOrderingSpecification(buyerEmail);
             return await _unitOfWor.Repository<Order>().ListAsync(spec);
         }
+
+        
     }
 }
