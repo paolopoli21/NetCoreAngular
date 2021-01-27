@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-checkout-address',
@@ -6,8 +7,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./checkout-address.component.css']
 })
 export class CheckoutAddressComponent implements OnInit {
+  @Input() checkoutForm: FormGroup;
 
-  constructor() { }
+  constructor(private fb: FormBuilder) { 
+    this.checkoutForm = this.fb.group({});
+  }
 
   ngOnInit(): void {
   }

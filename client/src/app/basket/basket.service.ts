@@ -23,6 +23,7 @@ export class BasketService {
       .pipe(
         map((basket: any) =>{
           this.basketSource.next(basket);
+          //this.basket$ = basket;
           this.calculteTotals();
         })
       );
